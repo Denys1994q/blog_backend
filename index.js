@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 import { registerValidation, loginValidation, postCreateValidation } from "./validation.js";
 
-import { UserController, PostController } from "./controllers/index.js";
+import { UserController, PostController, CommentController } from "./controllers/index.js";
 
 import { handleValidationErrors, checkAuth } from "./utils/index.js";
 
@@ -51,6 +51,8 @@ app.post("/auth/register", registerValidation, handleValidationErrors, UserContr
 // 3. перевіряємо чи можемо отримати інформацію про себе
 app.get("/auth/me", checkAuth, UserController.getMe);
 
+app.get("/auth/users", UserController.getUsers);
+
 // роути для СТАТТЕЙ
 app.get("/posts", PostController.getAll);
 app.get("/posts/:id", PostController.getOne);
@@ -59,7 +61,14 @@ app.post("/posts", checkAuth, postCreateValidation, handleValidationErrors, Post
 app.delete("/posts/:id", checkAuth, PostController.remove);
 app.patch("/posts/:id", checkAuth, postCreateValidation, handleValidationErrors, PostController.update);
 
-app.post("/uploads", checkAuth, upload.single("image"), (req, res) => {
+app.post("/posts/:id/comments", checkAuth, CommentController.createComment);
+app.delete("/posts/:postId/:id/comments", checkAuth, CommentController.removeComment);
+app.patch("/comments/update", CommentController.updateComment);
+app.post("/comments/addVote", CommentController.addVote);
+app.delete("/comments/:commentId/:userId/removeVote", CommentController.removeVote);
+
+// checkAuth забрав
+app.post("/uploads", upload.single("image"), (req, res) => {
     // повертаємо клієнту інфу щодо того за яким шляхом ми зберегли картинки
     res.json({
         url: `/uploads/${req.file.originalname}`,

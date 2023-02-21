@@ -1,9 +1,19 @@
 import PostModel from "../models/Post.js";
 
 export const getAll = async (req, res) => {
+    const { page, limit, search = "", sort = "all" } = req.query;
+    const regex = new RegExp(search, "i"); // i for case insensitive
     try {
         // .populate().exec() треба для того, щоб в базі даних правильно відображалася інформацію про юзера, який запостив статтю
-        const posts = await PostModel.find().populate("user").exec();
+        const t = sort === "date" ? { createdAt: -1 } : { viewsCount: -1 };
+
+        const posts = await PostModel.find({ title: { $regex: regex } })
+            .sort(sort !== "all" ? t : { createdAt: 1 })
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+            .populate(["user", "comments"])
+            .exec();
+
         res.json(posts);
     } catch (err) {
         console.log(err);
@@ -41,7 +51,7 @@ export const getOne = async (req, res) => {
                 }
                 res.json(doc);
             }
-        );
+        ).populate(["user", { path: "comments", populate: { path: "user" } }]);
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -87,6 +97,9 @@ export const create = async (req, res) => {
             text: req.body.text,
             imageUrl: req.body.imageUrl,
             tags: req.body.tags,
+            ingredients: req.body.ingredients,
+            energy: req.body.energy,
+            cookTime: req.body.cookTime,
             // userId ми з клієнту не передаємо, ми його самі беремо. Він в нас з'являється при авторизації користувача і додається до його запитів нами ж (тобто, його юзер сам не записує, але браузер нам передає на сервер)
             user: req.userId,
         });
@@ -114,8 +127,10 @@ export const update = async (req, res) => {
                 title: req.body.title,
                 text: req.body.text,
                 imageUrl: req.body.imageUrl,
+                ingredients: req.body.ingredients,
+                energy: req.body.energy,
+                cookTime: req.body.cookTime,
                 user: req.userId,
-                tags: req.body.tags,
             }
         );
         res.json({

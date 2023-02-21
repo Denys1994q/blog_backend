@@ -110,3 +110,27 @@ export const getMe = async (req, res) => {
         res.json(userData);
     } catch (err) {}
 };
+
+export const getUsers = async (req, res) => {
+    try {
+        // витягаємо юзера з бази даних по його userId, який отримали з його токена, який розшифрували в мідлвер checkAuth
+        const users = await UserModel.find();
+        console.log(22323);
+        console.log(users);
+
+        if (!users) {
+            return res.status(404).json({
+                message: "Користувача не знайдено",
+            });
+        }
+
+        // вертаємо дані просто без пароля
+        // const { passwordHash, ...userData } = users._doc;
+
+        // повертаємо інформацію про юзера
+        res.json({ users });
+        // res.status(200).json({
+        //     message: "kokoko",
+        // });
+    } catch (err) {}
+};
