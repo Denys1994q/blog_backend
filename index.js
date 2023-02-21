@@ -1,4 +1,5 @@
 import express from "express";
+import fs from "fs";
 import multer from "multer";
 import cors from "cors";
 
@@ -31,6 +32,9 @@ app.use(cors());
 const storage = multer.diskStorage({
     // куди зберігати файл, в папку аплоадс
     destination: (__, _, cb) => {
+        if (!fs.existsSync("uploads")) {
+            fs.mkdirSync("uploads");
+        }
         cb(null, "uploads");
     },
     // як називати файл
