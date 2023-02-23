@@ -113,6 +113,7 @@ export const getMe = async (req, res) => {
 
 export const getUsers = async (req, res) => {
     try {
+        console.log(11);
         // витягаємо юзера з бази даних по його userId, який отримали з його токена, який розшифрували в мідлвер checkAuth
         const users = await UserModel.find();
         console.log(22323);
