@@ -8,7 +8,7 @@ export const loginValidation = [
 export const registerValidation = [
     body("email", "Неправильний формат пошти").isEmail(),
     body("password", "Недостатньо символів").isLength({ min: 10 }),
-    body("fullName", "Недостатньо символів").isLength({ min: 5 }),
+    body("fullName", "Недостатньо символів").isLength({ min: 3 }),
     body("avatarUrl", "Неправильна ссилка").optional().isString(),
 ];
 
