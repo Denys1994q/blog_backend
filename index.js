@@ -4,10 +4,16 @@ import multer from "multer";
 import cors from "cors";
 import cloudinary from "cloudinary";
 
+// cloudinary.config({
+//     cloud_name: "dw60kllwn",
+//     api_key: "983718871222268",
+//     api_secret: "SCJy-hZZ5kpWSybySj8DDI05-Es",
+// });
+
 cloudinary.config({
-    cloud_name: "dw60kllwn",
-    api_key: "983718871222268",
-    api_secret: "SCJy-hZZ5kpWSybySj8DDI05-Es",
+    cloud_name: process.env.REACT_APP_CLOUD_API_NAME,
+    api_key: process.env.REACT_APP_CLOUD_API_KEY,
+    api_secret: REACT_APP_CLOUD_API_SECRET,
 });
 
 import mongoose from "mongoose";
@@ -77,17 +83,6 @@ app.delete("/posts/:postId/:id/comments", checkAuth, CommentController.removeCom
 app.patch("/comments/update", CommentController.updateComment);
 app.post("/comments/addVote", CommentController.addVote);
 app.delete("/comments/:commentId/:userId/removeVote", CommentController.removeVote);
-
-// checkAuth забрав. А взагалі воно треба по ходу, щоб не можна було просто ввести юрл креет пост і перейти.
-// в мене зараз можна і це погано
-
-// зберігаю і повертаю локальну адресу
-// app.post("/uploads", upload.single("image"), (req, res) => {
-//     // повертаємо клієнту інфу щодо того за яким шляхом ми зберегли картинки
-//     res.json({
-//         url: `/uploads/${req.file.originalname}`,
-//     });
-// });
 
 app.post("/uploads", upload.single("image"), async (req, res) => {
     try {
