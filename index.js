@@ -2,6 +2,13 @@ import express from "express";
 import fs from "fs";
 import multer from "multer";
 import cors from "cors";
+import cloudinary from "cloudinary";
+
+cloudinary.config({
+    cloud_name: "dw60kllwn",
+    api_key: "983718871222268",
+    api_secret: "SCJy-hZZ5kpWSybySj8DDI05-Es",
+});
 
 import mongoose from "mongoose";
 
@@ -71,12 +78,32 @@ app.patch("/comments/update", CommentController.updateComment);
 app.post("/comments/addVote", CommentController.addVote);
 app.delete("/comments/:commentId/:userId/removeVote", CommentController.removeVote);
 
-// checkAuth забрав
-app.post("/uploads", upload.single("image"), (req, res) => {
-    // повертаємо клієнту інфу щодо того за яким шляхом ми зберегли картинки
-    res.json({
-        url: `/uploads/${req.file.originalname}`,
-    });
+// checkAuth забрав. А взагалі воно треба по ходу, щоб не можна було просто ввести юрл креет пост і перейти.
+// в мене зараз можна і це погано
+
+// зберігаю і повертаю локальну адресу
+// app.post("/uploads", upload.single("image"), (req, res) => {
+//     // повертаємо клієнту інфу щодо того за яким шляхом ми зберегли картинки
+//     res.json({
+//         url: `/uploads/${req.file.originalname}`,
+//     });
+// });
+
+app.post("/uploads", upload.single("image"), async (req, res) => {
+    try {
+        console.log(req.file);
+        const file = req.file;
+
+        const result = await cloudinary.uploader.upload(file.path, {
+            public_id: "olympic_flag",
+        });
+        // повертаємо клієнту інфу щодо того за яким шляхом ми зберегли картинки
+        res.json(result);
+        // res.json({ n: "2" });
+    } catch (err) {
+        console.log(err);
+        res.json(err);
+    }
 });
 
 // запуск сервера
