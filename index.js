@@ -4,12 +4,6 @@ import multer from "multer";
 import cors from "cors";
 import cloudinary from "cloudinary";
 
-// cloudinary.config({
-//     cloud_name: "dw60kllwn",
-//     api_key: "983718871222268",
-//     api_secret: "SCJy-hZZ5kpWSybySj8DDI05-Es",
-// });
-
 cloudinary.config({
     cloud_name: process.env.REACT_APP_CLOUD_API_NAME,
     api_key: process.env.REACT_APP_CLOUD_API_KEY,
@@ -26,11 +20,11 @@ import { handleValidationErrors, checkAuth } from "./utils/index.js";
 
 const app = express();
 
-// middleware - це функція, яка виконується перед основним запитом. Якось обробляє і повертає дані. Наприклад, і для видалення і для зміни користувача треба знайти його по айді. Логіка по знаходженню виноситься в мідлвер і повертає req з потрібним айді.
-
-// підключаємося до нашої бази даних
+// підключаємося до бази даних
 mongoose
-    .connect("mongodb+srv://Denys1994:pp74tvVguAJTZZa@cluster0.l8hygki.mongodb.net/blog?retryWrites=true&w=majority")
+    .connect(
+        `mongodb+srv://${process.env.REACT_APP_MONGODB}@cluster0.l8hygki.mongodb.net/blog?retryWrites=true&w=majority`
+    )
     .then(() => console.log("DB Ok"))
     .catch(err => console.log("ERROR", err));
 
