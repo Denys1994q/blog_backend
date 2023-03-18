@@ -26,13 +26,14 @@ export const getAll = async (req, res) => {
 export const getOne = async (req, res) => {
     // статтю треба знайти і відразу оновити інфу щодо її переглядів (додати 1). І повернути вже оновлену статтю
     try {
+        const { views } = req.query;
         const postId = req.params.id;
         PostModel.findOneAndUpdate(
             {
                 _id: postId,
             },
             {
-                $inc: { viewsCount: 1 },
+                $inc: { viewsCount: views === "1" ? 1 : 0 },
             },
             {
                 returnDocument: "after",

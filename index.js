@@ -23,7 +23,8 @@ const app = express();
 // підключаємося до бази даних
 mongoose
     .connect(
-        `mongodb+srv://${process.env.REACT_APP_MONGODB}@cluster0.l8hygki.mongodb.net/blog?retryWrites=true&w=majority`
+        `mongodb+srv://Denys1994:pp74tvVguAJTZZa@cluster0.l8hygki.mongodb.net/blog?retryWrites=true&w=majority`
+        // `mongodb+srv://${process.env.REACT_APP_MONGODB}@cluster0.l8hygki.mongodb.net/blog?retryWrites=true&w=majority`
     )
     .then(() => console.log("DB Ok"))
     .catch(err => console.log("ERROR", err));

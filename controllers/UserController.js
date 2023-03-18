@@ -76,7 +76,7 @@ export const login = async (req, res) => {
                 expiresIn: "30d",
             }
         );
-        // вертаємо дані просто без пароля
+        // повертаємо дані просто без пароля
         const { passwordHash, ...userData } = user._doc;
 
         // повертаємо інформацію про юзера
@@ -108,30 +108,24 @@ export const getMe = async (req, res) => {
 
         // повертаємо інформацію про юзера
         res.json(userData);
-    } catch (err) {}
+    } catch (err) {
+        console.log(err)
+    }
 };
 
 export const getUsers = async (req, res) => {
     try {
-        console.log(11);
         // витягаємо юзера з бази даних по його userId, який отримали з його токена, який розшифрували в мідлвер checkAuth
         const users = await UserModel.find();
-        console.log(22323);
-        console.log(users);
 
         if (!users) {
             return res.status(404).json({
                 message: "Користувача не знайдено",
             });
         }
-
-        // вертаємо дані просто без пароля
-        // const { passwordHash, ...userData } = users._doc;
-
         // повертаємо інформацію про юзера
         res.json({ users });
-        // res.status(200).json({
-        //     message: "kokoko",
-        // });
-    } catch (err) {}
+    } catch (err) {
+        console.log(err)
+    }
 };
